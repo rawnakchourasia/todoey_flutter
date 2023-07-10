@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import './../models/task_data.dart';
+import 'package:provider/provider.dart';
 
-class AddTaskScreen extends StatelessWidget {
-  AddTaskScreen({
-    super.key,
-    required this.addTaskTitle,
-  });
-  final Function addTaskTitle;
+// ignore: must_be_immutable
+class AddTaskScreen extends StatefulWidget {
+  const AddTaskScreen({super.key});
 
-  final messageTextController = TextEditingController();
+  @override
+  State<AddTaskScreen> createState() => _AddTaskScreenState();
+}
+
+class _AddTaskScreenState extends State<AddTaskScreen> {
+  late String taskText;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +43,6 @@ class AddTaskScreen extends StatelessWidget {
               autofocus: true,
               textAlign: TextAlign.center,
               style: const TextStyle(color: Colors.black),
-              controller: messageTextController,
               decoration: const InputDecoration(
                 filled: true,
                 fillColor: Colors.white,
@@ -48,7 +51,9 @@ class AddTaskScreen extends StatelessWidget {
                         BorderSide(color: Colors.lightBlueAccent, width: 5)),
               ),
               onChanged: (value) {
-                // print(value);
+                setState(() {
+                  taskText = value;
+                });
               },
             ),
             const SizedBox(
@@ -57,7 +62,9 @@ class AddTaskScreen extends StatelessWidget {
             TextButton(
               style: flatButtonStyle,
               onPressed: () {
-                addTaskTitle(messageTextController.text);
+                Provider.of<TaskData>(context, listen: false)
+                    .taskadd(taskName: taskText);
+                Navigator.pop(context);
               },
               child: const Text(
                 'Add',
